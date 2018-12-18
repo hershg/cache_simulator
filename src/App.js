@@ -30,7 +30,7 @@ class App extends Component {
         <h1>Hello, React!</h1>
         <Button
           renderAs="a"
-          href="http://localhost:3000/"
+          href="https://hershg.github.io/"
           color="success"
           size="small"
           rounded
