@@ -1,25 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Button } from 'react-bulma-components/full';
+import Table from './Table';
+import Form from './Form';
 
 class App extends Component {
+  state = {
+    characters: []
+  };
+
+  removeCharacter = index => {
+    const { characters } = this.state;
+
+    this.setState({
+      characters: characters.filter((character, i) => {
+        return i !== index;
+      })
+    });
+  };
+
+  handleSubmit = character => {
+    this.setState({ characters: [...this.state.characters, character] });
+  };
+
   render() {
+    const { characters } = this.state;
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <h1>Hello, React!</h1>
+        <Button
+          renderAs="a"
+          href="http://localhost:3000/"
+          color="success"
+          size="small"
+          rounded
+          outlined
+        >
+          Reload
+        </Button>
+        <Table charData={characters} removeChar={this.removeCharacter} />
+        <Form handleSubmit={this.handleSubmit} />
       </div>
     );
   }
