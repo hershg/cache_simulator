@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import 'bulma/css/bulma.css'
-import App from './App';
+import CacheSim from './CacheSim';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<CacheSim />, document.getElementById('root'));

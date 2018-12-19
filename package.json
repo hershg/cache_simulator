@@ -4,16 +4,13 @@
   "private": true,
   "homepage": "https://hershg.github.io",
   "dependencies": {
+    "@material-ui/core": "^3.7.0",
+    "@material-ui/icons": "^3.0.1",
     "husky": "^1.2.1",
     "lint-staged": "^8.1.0",
-    "prettier": "^1.15.3",
     "react": "^16.6.3",
-    "react-bulma-components": "^2.3.0",
     "react-dom": "^16.6.3",
-    "react-redux": "^6.0.0",
-    "react-scripts": "2.1.1",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "react-scripts": "^2.1.1"
   },
   "husky": {
     "hooks": {
@@ -22,7 +19,6 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --single-quote --write",
       "git add"
     ]
   },
