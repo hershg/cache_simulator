@@ -5,10 +5,9 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
+import TextField from '@material-ui/core/TextField';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
 const styles = theme => ({
     root: {
@@ -18,7 +17,18 @@ const styles = theme => ({
     },
     list: {
         width: 300,
-    }
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+    },
+    dense: {
+        marginTop: 19,
+    },
+    menu: {
+        width: 200,
+    },
 });
 
 function CacheDrawer(props) {
@@ -26,23 +36,31 @@ function CacheDrawer(props) {
 
     const sideList = (
         <div className={classes.list}>
-        <List>
-            {['Close'].map((text, index) => (
-                <ListItem button key={text} onClick={props.toggleDrawer('left', false)}>
+            <List>
+                <ListItem button key="close" onClick={props.toggleDrawer('left', false)}>
                     <ListItemIcon></ListItemIcon>
-                    <ListItemText primary={text} />
+                    <ListItemText primary="Close Settings" />
                 </ListItem>
-            ))}
-        </List>
-        <Divider />
-        <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-            </ListItem>
-            ))}
-        </List>
+            </List>
+            <Divider />
+            <List>
+                <ListItem key="addrSize">
+                    <ListItemIcon></ListItemIcon>
+                    <TextField
+                        error={props.addrSizeError}
+                        id="standard-number"
+                        label="Memory Address Size"
+                        value={props.addrSize}
+                        onChange={props.handleChange('addrSize')}
+                        type="number"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        margin="normal"
+                    />
+                </ListItem>
+            </List>
         </div>
     );    
 

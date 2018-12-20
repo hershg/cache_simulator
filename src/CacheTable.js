@@ -50,7 +50,7 @@ function CacheTable(props) {
                         <TableCell align="right">B</TableCell>
                         <TableCell align="right">C</TableCell>
                         <TableCell align="right">D</TableCell>
-                        <TableCell align="right">{props.isOpen ? "OPENED" : "CLOSED"}</TableCell>
+                        <TableCell align="right">E</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

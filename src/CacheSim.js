@@ -10,15 +10,14 @@ const styles = theme => ({
         ...theme.mixins.gutters(),
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
-    },
-    list: {
-        width: 300,
     }
 });
 
 class App extends React.Component {
   state = {
-    left: false
+    left: false,
+    addrSize: 16,
+    addrSizeError: false
   };
 
   toggleDrawer = (side, open) => () => {
@@ -27,12 +26,34 @@ class App extends React.Component {
     });
   };
 
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+    if (name === "addrSize") {
+      if (event.target.value < 0) {
+        this.setState({
+          addrSizeError: true,
+        });
+      } else {
+        this.setState({
+          addrSizeError: false,
+        });
+      }
+    }
+  };
+
   render() {
     return (
         <div>
-            <CacheMenu toggleDrawer={this.toggleDrawer} isOpen={this.state.left}  />
-            <CacheDrawer toggleDrawer={this.toggleDrawer} isOpen={this.state.left} />
-            <CacheTable toggleDrawer={this.toggleDrawer} isOpen={this.state.left} />
+            <CacheMenu    toggleDrawer={this.toggleDrawer} 
+                          isOpen={this.state.left} />
+            <CacheDrawer  toggleDrawer={this.toggleDrawer} 
+                          isOpen={this.state.left} 
+                          handleChange={this.handleChange} 
+                          addrSize={this.state.addrSize}
+                          addrSizeError={this.state.addrSizeError} />
+            <CacheTable   toggleDrawer={this.toggleDrawer} />
         </div>
     );
   }
