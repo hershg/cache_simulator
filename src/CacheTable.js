@@ -26,7 +26,7 @@ function createRow(a, b, c, d, e) {
 }
 
 const rows = [
-    createRow('Frozen yoghurt', 159, 6.0, 24, 4.0),
+    createRow('Frozen yogurt', 159, 6.0, 24, 4.0),
     createRow('Ice cream sandwich', 237, 9.0, 37, 4.3),
     createRow('Eclair', 262, 16.0, 24, 6.0),
     createRow('Cupcake', 305, 3.7, 67, 4.3),
@@ -42,7 +42,7 @@ function CacheTable(props) {
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <Button onClick={props.toggleDrawer('left', true)}>
+                            <Button onClick={props.toggleDrawer(true)}>
                                 Open
                             </Button>
                         </TableCell>

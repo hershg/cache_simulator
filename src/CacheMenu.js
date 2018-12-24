@@ -27,7 +27,7 @@ function CacheMenu(props) {
       <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton className={classes.menuButton} onClick={props.toggleDrawer('left', true)} color="inherit" aria-label="Menu">
+                    <IconButton className={classes.menuButton} onClick={props.toggleDrawer(true)} color="inherit" aria-label="Menu">
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
@@ -44,7 +44,7 @@ function CacheMenu(props) {
                 Paper can be used to build surface or other elements for your application.
                 </Typography>
 
-                <Button onClick={this.toggleDrawer('left', true)}>
+                <Button onClick={this.toggleDrawer(true)}>
                     Open
                 </Button>
                 
