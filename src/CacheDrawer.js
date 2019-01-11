@@ -8,6 +8,9 @@ import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 
 const styles = theme => ({
     root: {
@@ -16,12 +19,12 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 2,
     },
     list: {
-        width: 350,
+        width: 390,
     },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
-        width: 200,
+        width: 190,
     },
     dense: {
         marginTop: 19,
@@ -33,13 +36,23 @@ const styles = theme => ({
 
 const ErrorsTextList = props => {
     const errorsList = props.cacheState.errorsText.map((errorText, index) => {
-        return (
-            <ListItem key={errorText.key}>
-                <Typography color="error">
-                    {errorText.value}
-                </Typography>
-            </ListItem>
-        );
+        if (errorText.isErr) {
+            return (
+                <ListItem key={errorText.key}>
+                    <Typography color="error">
+                        {errorText.value}
+                    </Typography>
+                </ListItem>
+            );
+        } else {
+            return (
+                <ListItem key={errorText.key}>
+                    <Typography color="normal">
+                        {errorText.value}
+                    </Typography>
+                </ListItem>
+            );
+        }
     });
     return errorsList
 };
@@ -51,7 +64,7 @@ function CacheDrawer(props) {
         <div className={classes.list}>
             <List>
                 <ListItem button key="close" onClick={props.toggleDrawer(false)}>
-                    <ListItemText primary="Close Settings" color="error" />
+                    <ListItemText primary="Close Configurator" color="error" />
                 </ListItem>
             </List>
             <Divider />
@@ -60,17 +73,38 @@ function CacheDrawer(props) {
                 <ListItem key="numWays">
                     <TextField
                         error={props.cacheState.numWaysError}
+                        disabled={props.cacheState.isNumWaysDisabled}
                         id="standard-number"
                         label="Associativity (# Ways)"
                         value={props.cacheState.numWays}
-                        onChange={props.handleChange("numWays")}
+                        onChange={props.handleChangeNum("numWays")}
                         type="number"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         margin="normal"
-                        variant="outlined"
+                        //variant="outlined"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox
+                            checked={props.cacheState.isDMSel}
+                            onChange={props.handleDM()}
+                            value="isDMSel"
+                            color="primary"
+                        />}
+                        label="DM"
+                        labelPlacement="start"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox
+                            checked={props.cacheState.isFASel}
+                            onChange={props.handleFA()}
+                            value="isFASel"
+                            color="primary"
+                        />}
+                        label="FA"
+                        labelPlacement="start"
                     />
                 </ListItem>
                 <ListItem key="cacheSize">
@@ -79,14 +113,14 @@ function CacheDrawer(props) {
                         id="standard-number"
                         label="Size of Cache (Bytes)"
                         value={props.cacheState.cacheSize}
-                        onChange={props.handleChange("cacheSize")}
+                        onChange={props.handleChangeNum("cacheSize")}
                         type="number"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         margin="normal"
-                        variant="outlined"
+                        //variant="outlined"
                     />
                 </ListItem>
                 <ListItem key="blockSize">
@@ -95,14 +129,14 @@ function CacheDrawer(props) {
                         id="standard-number"
                         label="Size of Each Block (Bytes)"
                         value={props.cacheState.blockSize}
-                        onChange={props.handleChange("blockSize")}
+                        onChange={props.handleChangeNum("blockSize")}
                         type="number"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         margin="normal"
-                        variant="outlined"
+                        //variant="outlined"
                     />
                 </ListItem>
                 <ListItem key="numBlocks">
@@ -111,78 +145,14 @@ function CacheDrawer(props) {
                         id="standard-number"
                         label="Number of Blocks"
                         value={props.cacheState.numBlocks}
-                        onChange={props.handleChange("numBlocks")}
+                        onChange={props.handleChangeNum("numBlocks")}
                         type="number"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         margin="normal"
-                        variant="outlined"
-                    />
-                </ListItem>
-                <ListItem key="tagBits">
-                    <TextField
-                        error={props.cacheState.tagBitsError}
-                        id="standard-number"
-                        label="Number of Tag Bits"
-                        value={props.cacheState.tagBits}
-                        onChange={props.handleChange("tagBits")}
-                        type="number"
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                </ListItem>
-                <ListItem key="indexBits">
-                    <TextField
-                        error={props.cacheState.indexBitsError}
-                        id="standard-number"
-                        label="Number of Index Bits"
-                        value={props.cacheState.indexBits}
-                        onChange={props.handleChange("indexBits")}
-                        type="number"
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                </ListItem>
-                <ListItem key="offsetBits">
-                    <TextField
-                        error={props.cacheState.offsetBitsError}
-                        id="standard-number"
-                        label="Number of Offset Bits"
-                        value={props.cacheState.offsetBits}
-                        onChange={props.handleChange("offsetBits")}
-                        type="number"
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                </ListItem>
-                <ListItem key="addrBits">
-                    <TextField
-                        error={props.cacheState.addrBitsError}
-                        id="standard-number"
-                        label="Memory Address Size (Bits)"
-                        value={props.cacheState.addrBits}
-                        onChange={props.handleChange("addrBits")}
-                        type="number"
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        margin="normal"
-                        variant="outlined"
+                        //variant="outlined"
                     />
                 </ListItem>
                 <ListItem key="numSets">
@@ -191,14 +161,78 @@ function CacheDrawer(props) {
                         id="standard-number"
                         label="Number of Sets"
                         value={props.cacheState.numSets}
-                        onChange={props.handleChange("numSets")}
+                        onChange={props.handleChangeNum("numSets")}
                         type="number"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         margin="normal"
-                        variant="outlined"
+                        //variant="outlined"
+                    />
+                </ListItem>
+                <ListItem key="tagBits">
+                    <TextField
+                        error={props.cacheState.tagBitsError}
+                        id="standard-number"
+                        label="Number of Tag Bits"
+                        value={props.cacheState.tagBits}
+                        onChange={props.handleChangeNum("tagBits")}
+                        type="number"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        margin="normal"
+                        //variant="outlined"
+                    />
+                </ListItem>
+                <ListItem key="indexBits">
+                    <TextField
+                        error={props.cacheState.indexBitsError}
+                        id="standard-number"
+                        label="Number of Index Bits"
+                        value={props.cacheState.indexBits}
+                        onChange={props.handleChangeNum("indexBits")}
+                        type="number"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        margin="normal"
+                        //variant="outlined"
+                    />
+                </ListItem>
+                <ListItem key="offsetBits">
+                    <TextField
+                        error={props.cacheState.offsetBitsError}
+                        id="standard-number"
+                        label="Number of Offset Bits"
+                        value={props.cacheState.offsetBits}
+                        onChange={props.handleChangeNum("offsetBits")}
+                        type="number"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        margin="normal"
+                        //variant="outlined"
+                    />
+                </ListItem>
+                <ListItem key="addrBits">
+                    <TextField
+                        error={props.cacheState.addrBitsError}
+                        id="standard-number"
+                        label="Memory Addr Size (Bits)"
+                        value={props.cacheState.addrBits}
+                        onChange={props.handleChangeNum("addrBits")}
+                        type="number"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        margin="normal"
+                        //variant="outlined"
                     />
                 </ListItem>
             </List>

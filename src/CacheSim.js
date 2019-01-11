@@ -25,7 +25,12 @@ class App extends React.Component {
     offsetBits: 5,
     addrBits: 16,
     numSets: 4,
-    errorsText: [],
+    errorsText: [
+      {key: "err1", isErr: false, value: "#Tag + #Index + #Offset = #Address Bits!"},
+      {key: "err2", isErr: false,  value: "2^(#Index Bits) = #Sets!"},
+      {key: "err3", isErr: false,  value: "2^(#Offset Bits) = Block Size!"},
+      {key: "err4", isErr: false,  value: "#Blocks * Block Size = Cache Size!"},
+      {key: "err5", isErr: false,  value: "#Sets * #Ways = #Blocks!"}],
     numWaysError: false,
     cacheSizeError: false,
     blockSizeError: false,
@@ -35,11 +40,25 @@ class App extends React.Component {
     offsetBitsError: false,
     addrBitsError: false,
     numSetsError: false,
+    isDMSel: true,
+    isFASel: false,
   };
 
   toggleDrawer = isOpen => () => {
     this.setState({
       "open": isOpen,
+    });
+  };
+
+  DMSel = isSel => () => {
+    this.setState({
+      isDMSel: isSel,
+    });
+  };
+
+  FASel = isSel => () => {
+    this.setState({
+      isFASel: isSel,
     });
   };
 
@@ -86,7 +105,7 @@ class App extends React.Component {
         numBlocksError: false,
       });
     }
-    if (this.state.tagBits < 1 || this.state.tagBits > 128 || 
+    if (this.state.tagBits < 0 || this.state.tagBits > 128 || 
         ((this.state.addrBits - (this.state.indexBits + this.state.offsetBits)) !== this.state.tagBits)) {
       this.setState({
         tagBitsError: true,
@@ -96,7 +115,7 @@ class App extends React.Component {
         tagBitsError: false,
       });
     }
-    if (this.state.indexBits < 1 || this.state.indexBits > 128 || 
+    if (this.state.indexBits < 0 || this.state.indexBits > 128 || 
         ((this.state.addrBits - (this.state.tagBits + this.state.offsetBits)) !== this.state.indexBits) ||
         (2 ** this.state.indexBits !== this.state.numSets)) {
       this.setState({
@@ -107,7 +126,7 @@ class App extends React.Component {
         indexBitsError: false,
       });
     }
-    if (this.state.offsetBits < 1 || this.state.offsetBits > 128 || 
+    if (this.state.offsetBits < 0 || this.state.offsetBits > 128 || 
         ((this.state.addrBits - (this.state.tagBits + this.state.indexBits)) !== this.state.offsetBits) ||
         (2 ** this.state.offsetBits !== this.state.blockSize)) {
       this.setState({
@@ -140,24 +159,54 @@ class App extends React.Component {
         numSetsError: false,
       });
     }
+
+    if (this.state.numWays === 1) {
+      this.setState({
+        isDMSel: true,
+      });
+    } else {
+      this.setState({
+        isDMSel: false,
+      });
+    }
+
+    if (this.state.numWays === this.state.numBlocks) {
+      this.setState({
+        isFASel: true,
+      });
+    } else {
+      this.setState({
+        isFASel: false,
+      });
+    }
   } 
 
   settingsErrors = () => () => {
     var errorsList = []
     if (this.state.tagBits + this.state.indexBits + this.state.offsetBits !== this.state.addrBits) {
-      errorsList.push({key: "err1", value: "Tag + Index + Offset != Address Bits!"});
+      errorsList.push({key: "err1", isErr: true, value: "#Tag + #Index + #Offset != #Address Bits!"});
+    } else {
+      errorsList.push({key: "err1", isErr: false, value: "#Tag + #Index + #Offset = #Address Bits!"});
     }
     if (2 ** this.state.indexBits !== this.state.numSets) {
-      errorsList.push({key: "err2", value: "2^(# Index Bits) != # Sets!"});
+      errorsList.push({key: "err2", isErr: true,  value: "2^(#Index Bits) != #Sets!"});
+    } else {
+      errorsList.push({key: "err2", isErr: false,  value: "2^(#Index Bits) = #Sets!"});
     }
     if (2 ** this.state.offsetBits !== this.state.blockSize) {
-      errorsList.push({key: "err3", value: "2^(# Offset Bits) != Block Size!"});
+      errorsList.push({key: "err3", isErr: true,  value: "2^(#Offset Bits) != Block Size!"});
+    } else {
+      errorsList.push({key: "err3", isErr: false,  value: "2^(#Offset Bits) = Block Size!"});
     }
     if (this.state.numBlocks * this.state.blockSize !== this.state.cacheSize) {
-      errorsList.push({key: "err4", value: "# Blocks * Block Size != Cache Size!"});
+      errorsList.push({key: "err4", isErr: true,  value: "#Blocks * Block Size != Cache Size!"});
+    } else {
+      errorsList.push({key: "err4", isErr: false,  value: "#Blocks * Block Size = Cache Size!"});
     }
     if (this.state.numSets * this.state.numWays !== this.state.numBlocks) {
-      errorsList.push({key: "err5", value: "# Sets * # Ways != # Blocks!"});
+      errorsList.push({key: "err5", isErr: true,  value: "#Sets * #Ways != #Blocks!"});
+    } else {
+      errorsList.push({key: "err5", isErr: false,  value: "#Sets * #Ways = #Blocks!"});
     }
     this.setState(
       {
@@ -167,10 +216,30 @@ class App extends React.Component {
     );
   };
 
-  handleChange = name => event => {
+  handleChangeNum = name => event => {
     this.setState(
       {
         [name]: parseInt(event.target.value, 10),
+      },
+      this.settingsErrors()
+    );
+  };
+
+  handleDM = () => event => {
+    this.setState(
+      {
+        isDMSel: event.target.checked,
+        numWays: 1,
+      },
+      this.settingsErrors()
+    );
+  };
+
+  handleFA = () => event => {
+    this.setState(
+      {
+        isFASel: event.target.checked,
+        numWays: this.state.numBlocks,
       },
       this.settingsErrors()
     );
@@ -181,7 +250,9 @@ class App extends React.Component {
         <div>
             <CacheMenu    toggleDrawer={this.toggleDrawer} />
             <CacheDrawer  toggleDrawer={this.toggleDrawer} 
-                          handleChange={this.handleChange}
+                          handleChangeNum={this.handleChangeNum}
+                          handleDM={this.handleDM}
+                          handleFA={this.handleFA}
                           cacheState={this.state} />
             <CacheTable   toggleDrawer={this.toggleDrawer} />
         </div>
